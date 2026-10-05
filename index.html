@@ -3,91 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jorge Salazar N · DAM · Primer empleo</title>
-  <!-- Fuentes modernas y limpias -->
+  <title>Álvaro García · DAM Portfolio</title>
+  <meta name="description" content="Portfolio de Álvaro García, desarrollador DAM. Landing personal y DevPortfolio con API de GitHub.">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 (iconos gratuitos) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
-    /* ----- RESET Y VARIABLES GLOBALES ----- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* =========================================================
+       RESET Y VARIABLES GLOBALES
+       ========================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg-dark: #0b0f17;
-      --bg-card: #131a26;
-      --bg-light: #1e293b;
-      --primary: #38bdf8;        /* azul cian brillante */
-      --primary-dark: #0ea5e9;
-      --secondary: #a78bfa;      /* violeta suave */
+      --bg-dark: #0a0e14;
+      --bg-card: #121821;
+      --bg-card-hover: #182030;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.4);
+      --secondary: #a78bfa;
+      --accent: #34d399;
       --text-main: #f1f5f9;
       --text-muted: #94a3b8;
-      --border-glow: rgba(56, 189, 248, 0.3);
-      --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-      --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.25);
-      --radius-lg: 28px;
-      --radius-md: 16px;
+      --text-dim: #64748b;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(56, 189, 248, 0.35);
+      --shadow-card: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
+      --shadow-hover: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+      --radius: 18px;
       --radius-sm: 12px;
-      --transition: all 0.25s ease-in-out;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
 
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-dark);
       color: var(--text-main);
       line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.07) 0%, transparent 30%),
+        radial-gradient(circle at 85% 60%, rgba(167, 139, 250, 0.07) 0%, transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(52, 211, 153, 0.05) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    ::selection { background: var(--primary); color: var(--bg-dark); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+    /* =========================================================
+       ANIMACIONES
+       ========================================================= */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+      50% { box-shadow: 0 0 35px rgba(56, 189, 248, 0.45); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* =========================================================
+       TRANSICIÓN ENTRE PÁGINAS (SPA)
+       ========================================================= */
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .page.fade-out {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    /* =========================================================
+       NAVBAR GLOBAL
+       ========================================================= */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1rem 0;
+      background: rgba(10, 14, 20, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: var(--transition);
+    }
+    .navbar.scrolled {
+      border-bottom-color: var(--border);
+      padding: 0.7rem 0;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    .nav-content {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      min-height: 100vh;
-      padding: 2rem 1.5rem 3rem;
-      background-image: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.06) 0%, transparent 35%),
-                        radial-gradient(circle at 85% 70%, rgba(167, 139, 250, 0.08) 0%, transparent 40%);
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-main);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .nav-logo span { color: var(--primary); }
+    .nav-logo .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--primary);
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0;
+      width: 0; height: 2px;
+      background: var(--primary);
+      transition: width var(--transition);
+      border-radius: 2px;
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.3rem;
+      z-index: 1001;
     }
 
-    /* ----- CONTENEDOR PRINCIPAL (ancho cómodo) ----- */
-    .landing {
+    /* =========================================================
+       LAYOUT
+       ========================================================= */
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* =========================================================
+       ========== PÁGINA 1: LANDING DAM ==========
+       ========================================================= */
+    .landing-wrap {
       max-width: 1200px;
-      width: 100%;
+      margin: 0 auto;
+      padding: 6rem 1.5rem 3rem;
       display: flex;
       flex-direction: column;
-      gap: 2.8rem;
+      gap: 2.5rem;
     }
 
-    /* ----- TARJETA DE PERFIL (HERO) ----- */
+    /* HERO */
     .hero {
       background: rgba(19, 26, 38, 0.8);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(56, 189, 248, 0.2);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius);
       padding: 2.5rem 2rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 2.5rem;
-      box-shadow: var(--shadow-sm), 0 0 0 1px rgba(56, 189, 248, 0.1) inset;
+      box-shadow: var(--shadow-card);
       transition: var(--transition);
     }
-
     .hero:hover {
       border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: var(--shadow-sm), var(--shadow-glow);
+      box-shadow: var(--shadow-card), 0 0 30px -10px var(--primary-glow);
     }
-
     .hero-avatar {
       flex-shrink: 0;
-      width: 140px;
-      height: 140px;
+      width: 140px; height: 140px;
       background: linear-gradient(135deg, #1e293b, #0f172a);
       border-radius: 50%;
       display: flex;
@@ -95,19 +237,13 @@
       justify-content: center;
       border: 4px solid var(--primary);
       box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
-      transition: var(--transition);
     }
-
     .hero-avatar i {
       font-size: 5rem;
       color: var(--primary);
       filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
     }
-
-    .hero-content {
-      flex: 1 1 300px;
-    }
-
+    .hero-content { flex: 1 1 300px; }
     .hero-badge {
       display: inline-block;
       background: rgba(56, 189, 248, 0.15);
@@ -121,7 +257,6 @@
       margin-bottom: 1rem;
       border: 1px solid rgba(56, 189, 248, 0.3);
     }
-
     .hero h1 {
       font-size: 2.8rem;
       font-weight: 800;
@@ -133,7 +268,6 @@
       color: transparent;
       margin-bottom: 0.5rem;
     }
-
     .hero h2 {
       font-size: 1.3rem;
       font-weight: 400;
@@ -143,20 +277,13 @@
       align-items: center;
       gap: 0.5rem;
     }
-
-    .hero h2 i {
-      color: var(--primary);
-      font-size: 1.2rem;
-    }
-
+    .hero h2 i { color: var(--primary); font-size: 1.2rem; }
     .hero-description {
       color: #cbd5e1;
       font-size: 1.05rem;
       margin-bottom: 1.5rem;
       max-width: 600px;
     }
-
-    /* Botones CTA */
     .cta-group {
       display: flex;
       flex-wrap: wrap;
@@ -178,33 +305,30 @@
       border: 1px solid transparent;
       cursor: pointer;
       letter-spacing: 0.3px;
+      font-family: inherit;
     }
-
     .btn-primary {
       background: var(--primary);
       color: #0b0f17;
       box-shadow: 0 8px 20px -6px rgba(56, 189, 248, 0.5);
     }
-
     .btn-primary:hover {
       background: #7dd3fc;
       transform: translateY(-3px);
       box-shadow: 0 15px 30px -8px rgba(56, 189, 248, 0.7);
     }
-
     .btn-outline {
       background: transparent;
       border: 1.5px solid rgba(56, 189, 248, 0.5);
       color: var(--primary);
     }
-
     .btn-outline:hover {
       background: rgba(56, 189, 248, 0.1);
       border-color: var(--primary);
       transform: translateY(-3px);
     }
 
-    /* ----- SKILLS / TECNOLOGÍAS ----- */
+    /* SECCIONES LANDING */
     .section-title {
       font-size: 1.8rem;
       font-weight: 700;
@@ -214,12 +338,7 @@
       gap: 0.75rem;
       letter-spacing: -0.02em;
     }
-
-    .section-title i {
-      color: var(--primary);
-      font-size: 1.8rem;
-    }
-
+    .section-title i { color: var(--primary); font-size: 1.8rem; }
     .section-title span {
       background: linear-gradient(to right, #ffffff, #bae6fd);
       -webkit-background-clip: text;
@@ -227,17 +346,16 @@
       color: transparent;
     }
 
+    /* SKILLS */
     .skills-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1.2rem;
-      margin-bottom: 0.5rem;
     }
-
     .skill-card {
       background: var(--bg-card);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
       padding: 1.6rem 1rem;
       display: flex;
       flex-direction: column;
@@ -246,27 +364,19 @@
       transition: var(--transition);
       box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.3);
     }
-
     .skill-card:hover {
       border-color: rgba(56, 189, 248, 0.4);
       background: #172032;
       transform: translateY(-5px);
-      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.6);
     }
-
     .skill-card i {
       font-size: 2.4rem;
       margin-bottom: 0.8rem;
       color: var(--primary);
       filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.4));
     }
-
-    .skill-card .skill-name {
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
+    .skill-card .skill-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.25rem; }
     .skill-card .skill-level {
       font-size: 0.8rem;
       color: var(--text-muted);
@@ -275,57 +385,51 @@
       border-radius: 50px;
     }
 
-    /* ----- PROYECTOS DESTACADOS (tarjetas) ----- */
+    /* PROYECTOS (Landing) */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.8rem;
     }
-
     .project-card {
       background: var(--bg-card);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-sm);
       padding: 1.8rem 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
       transition: var(--transition);
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
     }
-
     .project-card:hover {
       border-color: rgba(56, 189, 248, 0.4);
       transform: translateY(-6px);
       box-shadow: 0 22px 30px -14px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.2);
     }
+    .project-card.clickable { cursor: pointer; }
+    .project-card.clickable::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .project-card.clickable:hover::after { transform: scaleX(1); }
 
     .project-icon {
       font-size: 2.2rem;
       color: var(--secondary);
       margin-bottom: 1rem;
     }
+    .project-card h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+    .project-card p { color: #cbd5e1; font-size: 0.95rem; margin-bottom: 1.2rem; flex: 1; }
 
-    .project-card h3 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-
-    .project-card p {
-      color: #cbd5e1;
-      font-size: 0.95rem;
-      margin-bottom: 1.2rem;
-      flex: 1;
-    }
-
-    .tech-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: auto;
-    }
-
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: auto; }
     .tech-tags span {
       background: rgba(56, 189, 248, 0.1);
       color: #bae6fd;
@@ -336,10 +440,26 @@
       border: 1px solid rgba(56, 189, 248, 0.2);
     }
 
-    /* ----- CONTACTO / FOOTER ----- */
+    .live-badge {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--accent);
+      color: #0b0f17;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.25rem 0.7rem;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
+    }
+    .live-badge i { font-size: 0.5rem; }
+
+    /* CONTACTO (Landing) */
     .contact-section {
       background: linear-gradient(145deg, #0f1621, #0b0f17);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius);
       padding: 2.5rem 2rem;
       border: 1px solid rgba(56, 189, 248, 0.15);
       display: flex;
@@ -347,10 +467,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 2rem;
-      margin-top: 1rem;
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--shadow-card);
     }
-
     .contact-text h3 {
       font-size: 1.6rem;
       font-weight: 700;
@@ -359,22 +477,9 @@
       align-items: center;
       gap: 0.6rem;
     }
-
-    .contact-text h3 i {
-      color: var(--primary);
-    }
-
-    .contact-text p {
-      color: var(--text-muted);
-      max-width: 400px;
-    }
-
-    .contact-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
+    .contact-text h3 i { color: var(--primary); }
+    .contact-text p { color: var(--text-muted); max-width: 400px; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 1rem; }
     .contact-btn {
       background: rgba(56, 189, 248, 0.08);
       border: 1px solid rgba(56, 189, 248, 0.25);
@@ -389,240 +494,378 @@
       transition: var(--transition);
       font-size: 0.95rem;
     }
-
-    .contact-btn i {
-      color: var(--primary);
-      font-size: 1.2rem;
-    }
-
+    .contact-btn i { color: var(--primary); font-size: 1.2rem; }
     .contact-btn:hover {
       background: rgba(56, 189, 248, 0.2);
       border-color: var(--primary);
       transform: translateY(-3px);
     }
 
-    /* ----- RESPONSIVE ----- */
-    @media (max-width: 700px) {
-      body {
-        padding: 1.5rem 1rem 2rem;
-      }
-
-      .hero {
-        padding: 1.8rem 1.5rem;
-        flex-direction: column;
-        text-align: center;
-        gap: 1.5rem;
-      }
-
-      .hero-avatar {
-        width: 120px;
-        height: 120px;
-      }
-
-      .hero-avatar i {
-        font-size: 4rem;
-      }
-
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-
-      .hero h2 {
-        justify-content: center;
-        font-size: 1.1rem;
-      }
-
-      .cta-group {
-        justify-content: center;
-      }
-
-      .section-title {
-        font-size: 1.6rem;
-      }
-
-      .contact-section {
-        flex-direction: column;
-        text-align: center;
-        padding: 2rem 1.5rem;
-      }
-
-      .contact-text h3 {
-        justify-content: center;
-      }
-
-      .contact-links {
-        justify-content: center;
-        width: 100%;
-      }
-
-      .contact-btn {
-        flex: 1 0 auto;
-        justify-content: center;
-      }
+    /* =========================================================
+       ========== PÁGINA 2: DEVPORTFOLIO ==========
+       ========================================================= */
+    .dev-hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 6rem 0 4rem;
     }
-
-    @media (max-width: 480px) {
-      .hero h1 {
-        font-size: 1.9rem;
-      }
-
-      .btn {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .skills-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Pequeño efecto de línea decorativa */
-    .divider {
+    .dev-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
       width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent);
-      margin: 0.5rem 0;
     }
-
-    /* Accesibilidad de foco */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 4px;
+    .dev-hero-text { animation: fadeInUp 0.8s ease both; }
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
       border-radius: 50px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.3px;
     }
-  </style>
-</head>
-<body>
-  <main class="landing">
+    .hero-status .dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulseGlow 2s infinite;
+    }
+    .dev-hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .dev-hero h1 .gradient {
+      background: linear-gradient(120deg, var(--primary), var(--secondary), var(--accent));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientShift 5s ease infinite;
+    }
+    .hero-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      min-height: 1.6em;
+    }
+    .hero-subtitle .type-cursor {
+      display: inline-block;
+      width: 2px; height: 1.1em;
+      background: var(--primary);
+      margin-left: 3px;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+    .dev-hero .hero-description {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
 
-    <!-- ======= HERO / PERFIL ======= -->
-    <section class="hero" aria-label="Presentación personal">
-      <div class="hero-avatar" aria-hidden="true">
-        <i class="fas fa-user-astronaut"></i>
-      </div>
-      <div class="hero-content">
-        <span class="hero-badge"><i class="fas fa-code"></i> DAM · Primer empleo</span>
-        <h1>Jorge Salazar</h1>
-        <h2><i class="fas fa-laptop-code"></i> Desarrollador de Aplicaciones Multiplataforma</h2>
-        <p class="hero-description">
-          Recién graduado en DAM, apasionado por crear soluciones limpias y eficientes. 
-          Busco mi primera oportunidad para aportar, aprender y crecer en un equipo de desarrollo.
-        </p>
-        <div class="cta-group">
-          <a href="#contacto" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Contactar</a>
-          <a href="#proyectos" class="btn btn-outline"><i class="fas fa-folder-open"></i> Ver proyectos</a>
-        </div>
-      </div>
-    </section>
+    .code-window {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-card), 0 0 60px -20px var(--primary-glow);
+      transform: rotateY(-5deg) rotateX(2deg);
+      transition: var(--transition);
+      animation: float 6s ease-in-out infinite;
+    }
+    .code-window:hover {
+      transform: rotateY(0) rotateX(0) translateY(-5px);
+      box-shadow: var(--shadow-hover), 0 0 80px -20px var(--primary-glow);
+    }
+    .window-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid var(--border);
+    }
+    .window-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .window-title {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .window-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .code-line { display: block; white-space: pre; }
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #86efac; }
+    .code-function { color: #38bdf8; }
+    .code-comment { color: #64748b; font-style: italic; }
+    .code-var { color: #fbbf24; }
+    .code-bracket { color: #94a3b8; }
+    .code-bool { color: #f472b6; }
 
-    <!-- ======= SKILLS / TECNOLOGÍAS ======= -->
-    <section aria-labelledby="skills-title">
-      <h2 id="skills-title" class="section-title">
-        <i class="fas fa-microchip"></i>
-        <span>Habilidades técnicas</span>
-      </h2>
-      <div class="skills-grid">
-        <div class="skill-card">
-          <i class="fab fa-java"></i>
-          <span class="skill-name">Java</span>
-          <span class="skill-level">Intermedio</span>
-        </div>
-        <div class="skill-card">
-          <i class="fab fa-python"></i>
-          <span class="skill-name">Python</span>
-          <span class="skill-level">Intermedio</span>
-        </div>
-        <div class="skill-card">
-          <i class="fas fa-database"></i>
-          <span class="skill-name">SQL / MySQL</span>
-          <span class="skill-level">Intermedio</span>
-        </div>
-        <div class="skill-card">
-          <i class="fab fa-android"></i>
-          <span class="skill-name">Android / Kotlin</span>
-          <span class="skill-level">Básico</span>
-        </div>
-        <div class="skill-card">
-          <i class="fab fa-html5"></i>
-          <span class="skill-name">HTML5 & CSS3</span>
-          <span class="skill-level">Intermedio</span>
-        </div>
-        <div class="skill-card">
-          <i class="fab fa-git-alt"></i>
-          <span class="skill-name">Git / GitHub</span>
-          <span class="skill-level">Intermedio</span>
-        </div>
-      </div>
-    </section>
+    .dev-section { padding: 5rem 0; }
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      display: block;
+      letter-spacing: 1px;
+    }
+    .dev-section .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      display: block;
+      text-align: center;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1rem;
+    }
+    .section-line {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      margin: 1.2rem auto 0;
+      border-radius: 3px;
+    }
 
-    <!-- ======= PROYECTOS DESTACADOS ======= -->
-    <section id="proyectos" aria-labelledby="projects-title">
-      <h2 id="projects-title" class="section-title">
-        <i class="fas fa-rocket"></i>
-        <span>Proyectos destacados</span>
-      </h2>
-      <div class="projects-grid">
-        <article class="project-card">
-          <div class="project-icon"><i class="fas fa-tasks"></i></div>
-          <h3>TaskFlow</h3>
-          <p>Aplicación de gestión de tareas con JavaFX y SQLite. Interfaz intuitiva, recordatorios y categorías.</p>
-          <div class="tech-tags">
-            <span>JavaFX</span>
-            <span>SQLite</span>
-            <span>MVC</span>
-          </div>
-        </article>
-        <article class="project-card">
-          <div class="project-icon"><i class="fas fa-mobile-alt"></i></div>
-          <h3>FitTracker</h3>
-          <p>App Android para seguimiento de entrenamientos. Registro de rutinas y estadísticas con Room.</p>
-          <div class="tech-tags">
-            <span>Kotlin</span>
-            <span>Room</span>
-            <span>MVVM</span>
-          </div>
-        </article>
-        <article class="project-card">
-          <div class="project-icon"><i class="fas fa-globe"></i></div>
-          <h3>DevPortfolio</h3>
-          <p>Landing page personal responsive con animaciones CSS y consumo de API de GitHub.</p>
-          <div class="tech-tags">
-            <span>HTML5</span>
-            <span>CSS3</span>
-            <span>JavaScript</span>
-          </div>
-        </article>
-      </div>
-    </section>
+    /* SOBRE MÍ (Dev) */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-avatar { display: flex; justify-content: center; }
+    .avatar-frame {
+      width: 240px; height: 240px;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: float 7s ease-in-out infinite;
+      box-shadow: 0 20px 60px -15px var(--primary-glow);
+      position: relative;
+    }
+    .avatar-frame::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      background: var(--bg-card);
+      border-radius: inherit;
+    }
+    .avatar-frame i {
+      font-size: 6rem;
+      color: var(--primary);
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 0 15px var(--primary-glow));
+    }
+    .about-text h3 { font-size: 1.6rem; font-weight: 700; margin-bottom: 1rem; }
+    .about-text h3 span { color: var(--primary); }
+    .about-text p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1rem; }
+    .about-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.8rem;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .info-item:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .info-item i { color: var(--primary); font-size: 1.2rem; width: 24px; text-align: center; }
+    .info-item .info-label { font-size: 0.75rem; color: var(--text-dim); display: block; }
+    .info-item .info-value { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
 
-    <!-- ======= CONTACTO / CTA FINAL ======= -->
-    <section id="contacto" class="contact-section" aria-label="Contacto y redes">
-      <div class="contact-text">
-        <h3><i class="fas fa-handshake"></i> ¿Hablamos?</h3>
-        <p>Estoy listo para incorporarme de inmediato. Envíame un mensaje y te responderé lo antes posible.</p>
-      </div>
-      <div class="contact-links">
-        <a href="mailto:alvaro.dam@email.com" class="contact-btn" aria-label="Enviar correo electrónico">
-          <i class="fas fa-envelope"></i> Email
-        </a>
-        <a href="#" class="contact-btn" aria-label="Perfil de LinkedIn">
-          <i class="fab fa-linkedin-in"></i> LinkedIn
-        </a>
-        <a href="#" class="contact-btn" aria-label="Repositorio de GitHub">
-          <i class="fab fa-github"></i> GitHub
-        </a>
-      </div>
-    </section>
+    /* SKILLS (Dev) */
+    .dev-skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.2rem;
+    }
+    .dev-skill-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.2rem;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .dev-skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.08), transparent);
+      transition: left 0.6s ease;
+    }
+    .dev-skill-card:hover::before { left: 100%; }
+    .dev-skill-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+    .dev-skill-card i {
+      font-size: 2.6rem;
+      margin-bottom: 0.9rem;
+      color: var(--primary);
+      transition: var(--transition);
+    }
+    .dev-skill-card:hover i { transform: scale(1.15) rotate(-5deg); color: var(--secondary); }
+    .dev-skill-card .skill-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; }
+    .skill-bar {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 0.8rem;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-    <!-- línea decorativa final -->
-    <div class="divider" role="presentation"></div>
-    <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 0.5rem;">
-      <i class="fas fa-code"></i> Álvaro García · DAM 2025 · disponible para primer empleo
-    </p>
-  </main>
-</body>
-</html>
+    /* PROYECTOS GitHub API */
+    .github-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .stat-pill i { color: var(--primary); }
+    .stat-pill strong { color: var(--text-main); }
+    .stat-pill:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+    .dev-projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .dev-project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .dev-project-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .dev-project-card:hover::after { transform: scaleX(1); }
+    .dev-project-card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+    .dev-project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .dev-project-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+    .dev-project-links { display: flex; gap: 0.5rem; }
+    .dev-project-links a {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 0.85rem;
+    }
+    .dev-project-links a:hover {
+      background: var(--primary);
+      color: var(--bg-dark);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .dev-project-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+    .dev-project-card p {
+      color: var(--text-muted);
+     
